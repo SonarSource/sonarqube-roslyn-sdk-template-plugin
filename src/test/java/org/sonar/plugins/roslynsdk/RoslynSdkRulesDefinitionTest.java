@@ -32,7 +32,7 @@ public class RoslynSdkRulesDefinitionTest {
 
   @Test
   public void test_rules_defined_with_sqale() {
-    rulesDefinedWithSqaleXml("/RoslynSdkRulesDefinitionTest/sqale.xml");
+    rulesDefinedWithSqaleXml("/org/sonar/plugins/roslynsdk/sqale.xml");
   }
 
   @Test
@@ -48,7 +48,7 @@ public class RoslynSdkRulesDefinitionTest {
       .put("RepositoryKey", "MyRepoKey")
       .put("RepositoryLanguage", "MyLangKey")
       .put("RepositoryName", "MyRepoName")
-      .put("RulesXmlResourcePath", "/RoslynSdkRulesDefinitionTest/rules.xml");
+      .put("RulesXmlResourcePath", "/org/sonar/plugins/roslynsdk/rules.xml");
     if (sqaleXmlResourcePath != null) {
       properties.put("SqaleXmlResourcePath", sqaleXmlResourcePath);
     }
