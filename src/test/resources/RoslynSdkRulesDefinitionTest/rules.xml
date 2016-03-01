@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rules>
+  <rule>
+    <key>S1000</key>
+    <name>My title</name>
+    <severity>CRITICAL</severity>
+    <cardinality>SINGLE</cardinality>
+    <description><![CDATA[My description]]></description>
+    <tag>bug</tag>
+  </rule>
+</rules>
