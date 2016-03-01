@@ -15,7 +15,7 @@
 
   <name>SonarQube Roslyn SDK Template Plugin</name>
   <description>Template plugin for Roslyn analyzers</description>
-  <url>http://redirect.sonarsource.com/plugins/csharp.html</url>
+  <url>http://redirect.sonarsource.com/plugins/roslynsdk.html</url>
   <inceptionYear>2016</inceptionYear>
 
   <licenses>
@@ -25,10 +25,17 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <id>dbolkensteyn</id>
+      <name>Dinesh Bolkensteyn</name>
+      <organization>SonarSource</organization>
+    </developer>
+  </developers>
   <scm>
-    <connection>scm:git:git@github.com:SonarSource-VisualStudio/sonarqube-roslyn-sdk.git</connection>
-    <developerConnection>scm:git:git@github.com:SonarSource-VisualStudio/sonarqube-roslyn-sdk.git</developerConnection>
-    <url>https://github.com/SonarSource-VisualStudio/sonarqube-roslyn-sdk</url>
+    <connection>scm:git:git@github.com:SonarSource-VisualStudio/sonarqube-roslyn-sdk-template-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:SonarSource-VisualStudio/sonarqube-roslyn-sdk-template-plugin.git</developerConnection>
+    <url>https://github.com/SonarSource-VisualStudio/sonarqube-roslyn-sdk-template-plugin</url>
     <tag>HEAD</tag>
   </scm>
   <issueManagement>
@@ -45,13 +52,6 @@
     <sonar.pluginKey>roslynsdkpluginkey</sonar.pluginKey>
     <sonar.pluginName>roslynsdkpluginname</sonar.pluginName>
     <sonar.pluginDescription>roslynsdkplugindescription</sonar.pluginDescription>
-
-    <sonar.requirePlugins />
-    <sonar.pluginOrganizationName />
-    <sonar.pluginIssueTrackerUrl />
-    <sonar.useChildFirstClassLoader>false</sonar.useChildFirstClassLoader>
-    <sonar.basePlugin />
-    <sonar.skipDependenciesPackaging>false</sonar.skipDependenciesPackaging>
   </properties>
 
   <dependencies>
@@ -65,6 +65,16 @@
       <groupId>org.codehaus.sonar.sslr-squid-bridge</groupId>
       <artifactId>sslr-squid-bridge</artifactId>
       <version>2.6</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.sonar.sslr</groupId>
+          <artifactId>sslr-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.sonar.sslr</groupId>
+          <artifactId>sslr-xpath</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -86,22 +96,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
-        <artifactId>sonar-packaging-maven-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-          <archive combine.children="override">
-            <!-- Remove inherited additional manifest entries such as build sha1 or timestamp -->
-            <manifestEntries combine.children="merge">
-              <Foobar>Hello world</Foobar>
-            </manifestEntries>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
