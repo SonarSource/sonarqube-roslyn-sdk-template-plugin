@@ -19,7 +19,10 @@
  */
 package org.sonar.plugins.roslynsdk;
 
+import com.google.common.collect.ImmutableList;
+import java.util.List;
 import org.junit.Test;
+import org.sonar.api.config.PropertyDefinition;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -27,15 +30,32 @@ public class RoslynSdkGeneratedPluginTest {
 
   @Test
   public void getExtensions() {
-    assertThat(new RoslynSdkGeneratedPlugin().getExtensions()).containsExactly(
+    List extensions = new RoslynSdkGeneratedPlugin().getExtensions();
+
+    Class<?>[] expectedExtensions = new Class<?>[] {
       RoslynSdkConfiguration.class,
-      RoslynSdkRulesDefinition.class,
-      RoslynSdkPluginProperties.class);
+      RoslynSdkRulesDefinition.class
+    };
+
+    assertThat(nonProperties(extensions)).contains(expectedExtensions);
+    assertThat(extensions).hasSize(
+      expectedExtensions.length
+        + new RoslynSdkPluginProperties(new RoslynSdkConfiguration()).getProperties().size());
   }
 
   @Test
   public void pico_container_key_differentiator() {
     assertThat(new RoslynSdkGeneratedPlugin().toString()).isEqualTo("example");
+  }
+
+  private static List nonProperties(List extensions) {
+    ImmutableList.Builder builder = ImmutableList.builder();
+    for (Object extension : extensions) {
+      if (!(extension instanceof PropertyDefinition)) {
+        builder.add(extension);
+      }
+    }
+    return builder.build();
   }
 
 }

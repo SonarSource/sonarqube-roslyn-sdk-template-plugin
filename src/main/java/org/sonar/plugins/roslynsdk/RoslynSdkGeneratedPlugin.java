@@ -25,19 +25,24 @@ import org.sonar.api.SonarPlugin;
 
 public class RoslynSdkGeneratedPlugin extends SonarPlugin {
 
-  private static final String pluginKeyDifferentiator = new RoslynSdkConfiguration().mandatoryProperty("PluginKeyDifferentiator");
+  private static final RoslynSdkConfiguration config = new RoslynSdkConfiguration();
 
   @Override
   public List getExtensions() {
-    return ImmutableList.of(
+    ImmutableList.Builder builder = ImmutableList.builder();
+
+    builder.add(
       RoslynSdkConfiguration.class,
-      RoslynSdkRulesDefinition.class,
-      RoslynSdkPluginProperties.class);
+      RoslynSdkRulesDefinition.class);
+
+    builder.addAll(new RoslynSdkPluginProperties(config).getProperties());
+
+    return builder.build();
   }
 
   @Override
   public String toString() {
-    return pluginKeyDifferentiator;
+    return config.mandatoryProperty("PluginKeyDifferentiator");
   }
 
 }
