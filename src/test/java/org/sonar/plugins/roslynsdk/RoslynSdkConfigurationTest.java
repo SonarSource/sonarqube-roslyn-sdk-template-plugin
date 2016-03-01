@@ -88,8 +88,7 @@ public class RoslynSdkConfigurationTest {
 
   @Test
   public void default_path() {
-    thrown.expectMessage("/org/sonar/plugins/roslynsdk/configuration.xml");
-    new RoslynSdkConfiguration();
+    assertThat(new RoslynSdkConfiguration().mandatoryProperty("PluginKeyDifferentiator")).isEqualTo("example");
   }
 
 }

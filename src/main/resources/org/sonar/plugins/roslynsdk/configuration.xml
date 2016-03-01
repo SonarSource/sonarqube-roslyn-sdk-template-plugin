@@ -1,3 +1,17 @@
 ﻿<RoslynSdkConfiguration>
   <PluginKeyDifferentiator>example</PluginKeyDifferentiator>
+  <RepositoryKey>roslyn.example</RepositoryKey>
+  <RepositoryLanguage>example</RepositoryLanguage>
+  <RepositoryName>example</RepositoryName>
+  <RulesXmlResourcePath></RulesXmlResourcePath>
+  <SqaleXmlResourcePath></SqaleXmlResourcePath>
+  <PluginProperties>
+    <example.pluginKey>example</example.pluginKey>
+    <example.pluginVersion>example</example.pluginVersion>
+    <example.staticResourceName>example</example.staticResourceName>
+    <example.nuget.packageId>example</example.nuget.packageId>
+    <example.nuget.packageVersion>example</example.nuget.packageVersion>
+    <example.analyzerId>example</example.analyzerId>
+    <example.ruleNamespace>example</example.ruleNamespace>
+  </PluginProperties>
 </RoslynSdkConfiguration>
