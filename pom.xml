@@ -52,6 +52,8 @@
     <sonar.pluginKey>roslynsdkpluginkey</sonar.pluginKey>
     <sonar.pluginName>roslynsdkpluginname</sonar.pluginName>
     <sonar.pluginDescription>roslynsdkplugindescription</sonar.pluginDescription>
+
+    <license.name>MIT</license.name>
   </properties>
 
   <dependencies>
