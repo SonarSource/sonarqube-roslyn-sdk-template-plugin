@@ -44,15 +44,7 @@
   </issueManagement>
 
   <properties>
-    <sonar.version>6.7.4</sonar.version>
-
-    <sonar.pluginClass>org.sonar.plugins.roslynsdk.RoslynSdkGeneratedPlugin</sonar.pluginClass>
-    <sonar.addMavenDescriptor>false</sonar.addMavenDescriptor>
-
-    <sonar.pluginKey>roslynsdkpluginkey</sonar.pluginKey>
-    <sonar.pluginName>roslynsdkpluginname</sonar.pluginName>
-    <sonar.pluginDescription>roslynsdkplugindescription</sonar.pluginDescription>
-
+    <sonar.version>7.3-alpha1</sonar.version>
     <license.name>MIT</license.name>
   </properties>
 
@@ -80,6 +72,18 @@
     </dependency>
 
     <dependency>
+      <groupId>org.codehaus.staxmate</groupId>
+      <artifactId>staxmate</artifactId>
+      <version>2.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
@@ -98,4 +102,22 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+        <artifactId>sonar-packaging-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <pluginKey>roslynsdkpluginkey</pluginKey>
+          <pluginName>roslynsdkpluginname</pluginName>
+          <pluginDescription>roslynsdkplugindescription</pluginDescription>
+          <pluginClass>org.sonar.plugins.roslynsdk.RoslynSdkGeneratedPlugin</pluginClass>
+          <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+          <addMavenDescriptor>false</addMavenDescriptor>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
