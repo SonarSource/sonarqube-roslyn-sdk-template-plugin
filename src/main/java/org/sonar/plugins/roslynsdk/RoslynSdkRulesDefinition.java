@@ -23,18 +23,18 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.sonar.api.BatchExtension;
+import java.nio.charset.StandardCharsets;
+import javax.xml.stream.XMLStreamException;
+import org.apache.commons.io.input.BOMInputStream;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
-public class RoslynSdkRulesDefinition implements RulesDefinition, BatchExtension {
+public class RoslynSdkRulesDefinition implements RulesDefinition {
 
   private RoslynSdkConfiguration config;
   private static final Logger LOG = Loggers.get(RoslynSdkRulesDefinition.class);
@@ -50,20 +50,28 @@ public class RoslynSdkRulesDefinition implements RulesDefinition, BatchExtension
       .setName(config.mandatoryProperty("RepositoryName"));
 
     String rulesXmlResourcePath = config.mandatoryProperty("RulesXmlResourcePath");
-    try (InputStreamReader rulesReader = new InputStreamReader(getClass().getResourceAsStream(rulesXmlResourcePath), Charsets.UTF_8)) {
-      RulesDefinitionXmlLoader loader = new RulesDefinitionXmlLoader();
-      loader.load(repository, rulesReader);
+
+    try (InputStreamReader rulesReader = new InputStreamReader(new BOMInputStream(getClass().getResourceAsStream(rulesXmlResourcePath)), StandardCharsets.UTF_8)) {
+      new RulesDefinitionXmlLoader().load(repository, rulesReader);
     } catch (IOException e) {
-      throw Throwables.propagate(e);
+      throw new IllegalStateException(e);
     }
 
     String sqaleXmlResourcePath = config.property("SqaleXmlResourcePath");
     if (sqaleXmlResourcePath != null) {
       LOG.warn("SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.");
-      SqaleXmlLoader.load(repository, sqaleXmlResourcePath);
+      try {
+        SqaleXmlLoader.load(repository, sqaleXmlResourcePath);
+      } catch (IllegalStateException e) {
+        Throwable cause = e.getCause();
+        if (cause instanceof XMLStreamException) {
+          LOG.warn("Unable to read SQALE xml file. Make sure the file does not starts with a BOM character.", cause);
+        } else {
+          throw e;
+        }
+      }
     }
 
     repository.done();
   }
-
 }

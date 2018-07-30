@@ -46,11 +46,20 @@ public class RoslynSdkRulesDefinitionTest {
   }
 
   @Test
+  public void test_rules_defined_with_sqale_and_BOM() {
+    rulesDefinedWithSqaleXml("/org/sonar/plugins/roslynsdk/sqaleWithBOM.xml", true);
+  }
+
+  @Test
   public void test_rules_defined_without_sqale() {
     rulesDefinedWithSqaleXml(null);
   }
 
   private void rulesDefinedWithSqaleXml(@Nullable String sqaleXmlResourcePath) {
+    rulesDefinedWithSqaleXml(sqaleXmlResourcePath, false);
+  }
+
+  private void rulesDefinedWithSqaleXml(@Nullable String sqaleXmlResourcePath, boolean withBOM) {
     Context context = new Context();
     assertThat(context.repositories()).isEmpty();
 
@@ -88,15 +97,26 @@ public class RoslynSdkRulesDefinitionTest {
     assertThat(rule.params()).isEmpty();
 
     if (sqaleXmlResourcePath != null) {
-      // sub-charactestic has been dropped with 6.7 LTS
-      assertThat(rule.debtSubCharacteristic()).isNull();
-      assertThat(rule.debtRemediationFunction().coefficient()).isNull();
-      assertThat(rule.debtRemediationFunction().offset()).isEqualTo("15min");
-      assertThat(rule.effortToFixDescription()).isNull();
+      if (withBOM) {
+        assertThat(rule.debtSubCharacteristic()).isNull();
+        assertThat(rule.debtRemediationFunction()).isNull();
+        assertThat(rule.effortToFixDescription()).isNull();
 
-      assertThat(logTester.logs()).hasSize(1);
-      assertThat(logTester.logs(LoggerLevel.WARN))
-        .contains("SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.");
+        assertThat(logTester.logs()).hasSize(2);
+        assertThat(logTester.logs(LoggerLevel.WARN)).contains(
+            "SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.",
+            "Unable to read SQALE xml file. Make sure the file does not starts with a BOM character.");
+      } else {
+        // sub-charactestic has been dropped with 6.7 LTS
+        assertThat(rule.debtSubCharacteristic()).isNull();
+        assertThat(rule.debtRemediationFunction().coefficient()).isNull();
+        assertThat(rule.debtRemediationFunction().offset()).isEqualTo("15min");
+        assertThat(rule.effortToFixDescription()).isNull();
+
+        assertThat(logTester.logs()).hasSize(1);
+        assertThat(logTester.logs(LoggerLevel.WARN))
+          .contains("SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.");
+      }
     } else {
       assertThat(rule.debtSubCharacteristic()).isNull();
       assertThat(rule.debtRemediationFunction()).isNull();

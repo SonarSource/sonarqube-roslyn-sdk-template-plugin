@@ -27,20 +27,20 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Resources;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
+import org.apache.commons.io.input.BOMInputStream;
 import org.codehaus.staxmate.SMInputFactory;
 import org.codehaus.staxmate.in.SMInputCursor;
-import org.sonar.api.ServerExtension;
+import org.sonar.api.server.ServerSide;
 
-public class RoslynSdkConfiguration implements ServerExtension {
+@ServerSide
+public class RoslynSdkConfiguration {
 
   private final String resourcePath;
   private final Map<String, String> properties;
@@ -54,7 +54,7 @@ public class RoslynSdkConfiguration implements ServerExtension {
   RoslynSdkConfiguration(String resourcePath) {
     this.resourcePath = resourcePath;
 
-    try (BufferedReader reader = reader(resourcePath)) {
+    try (InputStreamReader reader = reader(resourcePath)) {
       XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
       xmlFactory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
       xmlFactory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.FALSE);
@@ -98,11 +98,10 @@ public class RoslynSdkConfiguration implements ServerExtension {
     this.pluginProperties = pluginProperties;
   }
 
-  private static BufferedReader reader(String resourcePath) {
-    URL url = Resources.getResource(RoslynSdkConfiguration.class, resourcePath);
+  private static InputStreamReader reader(String resourcePath) {
     try {
-      return Resources.asCharSource(url, StandardCharsets.UTF_8).openBufferedStream();
-    } catch (IOException e) {
+      return new InputStreamReader(new BOMInputStream(RoslynSdkConfiguration.class.getResourceAsStream(resourcePath)), StandardCharsets.UTF_8);
+    } catch (Exception e) {
       throw new IllegalArgumentException("Could not read " + resourcePath, e);
     }
   }
