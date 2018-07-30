@@ -28,8 +28,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class RoslynSdkConfiguration implements ServerExtension {
   RoslynSdkConfiguration(String resourcePath) {
     this.resourcePath = resourcePath;
 
-    try (InputStreamReader reader = reader(resourcePath)) {
+    try (BufferedReader reader = reader(resourcePath)) {
       XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
       xmlFactory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
       xmlFactory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.FALSE);
@@ -98,10 +98,10 @@ public class RoslynSdkConfiguration implements ServerExtension {
     this.pluginProperties = pluginProperties;
   }
 
-  private static InputStreamReader reader(String resourcePath) {
+  private static BufferedReader reader(String resourcePath) {
     URL url = Resources.getResource(RoslynSdkConfiguration.class, resourcePath);
     try {
-      return Resources.newReaderSupplier(url, StandardCharsets.UTF_8).getInput();
+      return Resources.asCharSource(url, StandardCharsets.UTF_8).openBufferedStream();
     } catch (IOException e) {
       throw new IllegalArgumentException("Could not read " + resourcePath, e);
     }

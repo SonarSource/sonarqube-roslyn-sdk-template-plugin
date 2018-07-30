@@ -26,13 +26,19 @@ package org.sonar.plugins.roslynsdk;
 import com.google.common.collect.ImmutableMap;
 import javax.annotation.Nullable;
 import org.junit.Test;
+import org.sonar.api.rules.RuleType;
 import org.sonar.api.server.rule.RulesDefinition.Context;
 import org.sonar.api.server.rule.RulesDefinition.Repository;
 import org.sonar.api.server.rule.RulesDefinition.Rule;
+import org.sonar.api.utils.log.LogTester;
+import org.sonar.api.utils.log.LoggerLevel;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 public class RoslynSdkRulesDefinitionTest {
+
+  @org.junit.Rule
+  public LogTester logTester = new LogTester();
 
   @Test
   public void test_rules_defined_with_sqale() {
@@ -77,18 +83,26 @@ public class RoslynSdkRulesDefinitionTest {
     assertThat(rule.template()).isFalse();
     assertThat(rule.htmlDescription()).isEqualTo("My description");
     assertThat(rule.markdownDescription()).isNull();
-    assertThat(rule.tags()).containsOnly("bug");
+    assertThat(rule.tags()).containsOnly("my-first-tag", "my-second-tag");
+    assertThat(rule.type()).isEqualTo(RuleType.BUG);
     assertThat(rule.params()).isEmpty();
 
     if (sqaleXmlResourcePath != null) {
-      assertThat(rule.debtSubCharacteristic()).isEqualTo("INSTRUCTION_RELIABILITY");
+      // sub-charactestic has been dropped with 6.7 LTS
+      assertThat(rule.debtSubCharacteristic()).isNull();
       assertThat(rule.debtRemediationFunction().coefficient()).isNull();
       assertThat(rule.debtRemediationFunction().offset()).isEqualTo("15min");
       assertThat(rule.effortToFixDescription()).isNull();
+
+      assertThat(logTester.logs()).hasSize(1);
+      assertThat(logTester.logs(LoggerLevel.WARN))
+        .contains("SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.");
     } else {
       assertThat(rule.debtSubCharacteristic()).isNull();
       assertThat(rule.debtRemediationFunction()).isNull();
       assertThat(rule.effortToFixDescription()).isNull();
+
+      assertThat(logTester.logs()).isEmpty();
     }
   }
 
