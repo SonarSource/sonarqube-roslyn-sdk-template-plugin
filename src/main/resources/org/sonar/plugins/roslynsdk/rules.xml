@@ -6,6 +6,8 @@
     <severity>CRITICAL</severity>
     <cardinality>SINGLE</cardinality>
     <description><![CDATA[My description]]></description>
-    <tag>bug</tag>
+    <tag>my-first-tag</tag>
+    <tag>my-second-tag</tag>
+    <type>BUG</type>
   </rule>
 </rules>

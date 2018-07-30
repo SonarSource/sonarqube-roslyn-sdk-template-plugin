@@ -30,11 +30,14 @@ import java.io.InputStreamReader;
 import org.sonar.api.BatchExtension;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
+import org.sonar.api.utils.log.Logger;
+import org.sonar.api.utils.log.Loggers;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
 public class RoslynSdkRulesDefinition implements RulesDefinition, BatchExtension {
 
   private RoslynSdkConfiguration config;
+  private static final Logger LOG = Loggers.get(RoslynSdkRulesDefinition.class);
 
   public RoslynSdkRulesDefinition(RoslynSdkConfiguration config) {
     this.config = config;
@@ -56,6 +59,7 @@ public class RoslynSdkRulesDefinition implements RulesDefinition, BatchExtension
 
     String sqaleXmlResourcePath = config.property("SqaleXmlResourcePath");
     if (sqaleXmlResourcePath != null) {
+      LOG.warn("SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.");
       SqaleXmlLoader.load(repository, sqaleXmlResourcePath);
     }
 

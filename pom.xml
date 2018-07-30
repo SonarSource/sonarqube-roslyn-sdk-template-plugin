@@ -44,7 +44,7 @@
   </issueManagement>
 
   <properties>
-    <sonar.version>4.5.2</sonar.version>
+    <sonar.version>6.7.4</sonar.version>
 
     <sonar.pluginClass>org.sonar.plugins.roslynsdk.RoslynSdkGeneratedPlugin</sonar.pluginClass>
     <sonar.addMavenDescriptor>false</sonar.addMavenDescriptor>
@@ -58,15 +58,15 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.codehaus.sonar</groupId>
+      <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api</artifactId>
       <version>${sonar.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.sonar.sslr-squid-bridge</groupId>
+      <groupId>org.sonarsource.sslr-squid-bridge</groupId>
       <artifactId>sslr-squid-bridge</artifactId>
-      <version>2.6</version>
+      <version>2.7.0.377</version>
       <exclusions>
         <exclusion>
           <groupId>org.codehaus.sonar.sslr</groupId>
@@ -82,7 +82,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.7</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
