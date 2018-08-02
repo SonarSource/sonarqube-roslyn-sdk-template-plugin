@@ -9,5 +9,7 @@
     <tag>my-first-tag</tag>
     <tag>my-second-tag</tag>
     <type>BUG</type>
+    <debtRemediationFunction>CONSTANT_ISSUE</debtRemediationFunction>
+    <debtRemediationFunctionOffset>15min</debtRemediationFunctionOffset>
   </rule>
 </rules>

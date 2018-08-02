@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,8 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -58,19 +59,21 @@ public class RoslynSdkConfigurationTest {
   public void valid() {
     RoslynSdkConfiguration config = new RoslynSdkConfiguration("/RoslynSdkConfigurationTest/valid.xml");
     assertThat(config.mandatoryProperty("Foo")).isEqualTo("FooValue");
-    assertThat(config.property("Foo")).isEqualTo("FooValue");
+    assertThat(config.property("Foo").get()).isEqualTo("FooValue");
     assertThat(config.mandatoryProperty("Bar")).isEqualTo("BarValue");
-    assertThat(config.property("Bar")).isEqualTo("BarValue");
+    assertThat(config.property("Bar").get()).isEqualTo("BarValue");
 
-    assertThat(config.property("NonExisting")).isNull();
+    assertThat(config.property("NonExisting").isPresent()).isFalse();
 
-    assertThat(config.properties()).isEqualTo(ImmutableMap.of(
-      "Foo", "FooValue",
-      "Bar", "BarValue"));
+    Map<String, String> expectedProperties = new HashMap<>();
+    expectedProperties.put("Foo", "FooValue");
+    expectedProperties.put("Bar", "BarValue");
+    assertThat(config.properties()).isEqualTo(expectedProperties);
 
-    assertThat(config.pluginProperties()).isEqualTo(ImmutableMap.of(
-      "PluginFoo", "PluginFooValue",
-      "PluginBar", "PluginBarValue"));
+    Map<String, String> expectedPluginProperties = new HashMap<>();
+    expectedPluginProperties.put("PluginFoo", "PluginFooValue");
+    expectedPluginProperties.put("PluginBar", "PluginBarValue");
+    assertThat(config.pluginProperties()).isEqualTo(expectedPluginProperties);
   }
 
   @Test

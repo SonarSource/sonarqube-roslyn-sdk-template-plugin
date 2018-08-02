@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,13 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.CheckForNull;
+import java.util.Optional;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.input.BOMInputStream;
@@ -50,7 +48,6 @@ public class RoslynSdkConfiguration {
     this("/org/sonar/plugins/roslynsdk/configuration.xml");
   }
 
-  @VisibleForTesting
   RoslynSdkConfiguration(String resourcePath) {
     this.resourcePath = resourcePath;
 
@@ -63,35 +60,35 @@ public class RoslynSdkConfiguration {
       SMInputFactory inputFactory = new SMInputFactory(xmlFactory);
 
       SMInputCursor root = inputFactory.rootElementCursor(reader).advance();
-      Preconditions.checkState(
-        root.hasLocalName("RoslynSdkConfiguration"),
-        "Expected <RoslynSdkConfiguration> as root element in configuration file: " + resourcePath + " but got: <" + root.getLocalName() + ">");
+      if (!root.hasLocalName("RoslynSdkConfiguration")) {
+        throw new IllegalStateException(
+          String.format("Expected <RoslynSdkConfiguration> as root element in configuration file: %s but got: <%s>", resourcePath, root.getLocalName()));
+      }
       SMInputCursor rootChildren = root.childElementCursor();
 
-      ImmutableMap.Builder<String, String> propertiesBuilder = ImmutableMap.builder();
+      Map<String, String> propertiesBuilder = new HashMap<>();
       Map<String, String> foundPluginProperties = null;
       while (rootChildren.getNext() != null) {
         if (rootChildren.hasLocalName("PluginProperties")) {
-          Preconditions.checkState(foundPluginProperties == null, "<PluginProperties> can be present at most once");
+          if (foundPluginProperties != null) {
+            throw new IllegalStateException("<PluginProperties> can be present at most once");
+          }
           foundPluginProperties = readPluginProperties(rootChildren.childElementCursor());
         } else {
           propertiesBuilder.put(rootChildren.getLocalName(), rootChildren.getElemStringValue());
         }
       }
       if (foundPluginProperties == null) {
-        foundPluginProperties = ImmutableMap.of();
+        foundPluginProperties = new HashMap<>();
       }
 
-      properties = propertiesBuilder.build();
+      properties = Collections.unmodifiableMap(propertiesBuilder);
       pluginProperties = foundPluginProperties;
-    } catch (XMLStreamException e) {
-      throw new IllegalStateException("Invalid Roslyn SDK XML configuration file: " + resourcePath, e);
-    } catch (IOException e) {
-      throw Throwables.propagate(e);
+    } catch (XMLStreamException | IOException e) {
+      throw new IllegalStateException(String.format("Invalid Roslyn SDK XML configuration file: %s", resourcePath), e);
     }
   }
 
-  @VisibleForTesting
   RoslynSdkConfiguration(String resourcePath, Map<String, String> properties, Map<String, String> pluginProperties) {
     this.resourcePath = resourcePath;
     this.properties = properties;
@@ -102,27 +99,25 @@ public class RoslynSdkConfiguration {
     try {
       return new InputStreamReader(new BOMInputStream(RoslynSdkConfiguration.class.getResourceAsStream(resourcePath)), StandardCharsets.UTF_8);
     } catch (Exception e) {
-      throw new IllegalArgumentException("Could not read " + resourcePath, e);
+      throw new IllegalArgumentException(String.format("Could not read %s", resourcePath), e);
     }
   }
 
   private static Map<String, String> readPluginProperties(SMInputCursor pluginPropertiesChildren) throws XMLStreamException {
-    ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+    Map<String, String> properties = new HashMap<>();
     while (pluginPropertiesChildren.getNext() != null) {
-      builder.put(pluginPropertiesChildren.getLocalName(), pluginPropertiesChildren.getElemStringValue());
+      properties.put(pluginPropertiesChildren.getLocalName(), pluginPropertiesChildren.getElemStringValue());
     }
-    return builder.build();
+    return Collections.unmodifiableMap(properties);
   }
 
   public String mandatoryProperty(String key) {
-    String value = property(key);
-    Preconditions.checkState(value != null, "Mandatory <" + key + "> element not found in the Roslyn SDK XML configuration file: " + resourcePath);
-    return value;
+    return property(key)
+      .orElseThrow(() -> new IllegalStateException(String.format("Mandatory <%s> element not found in the Roslyn SDK XML configuration file: %s", key, resourcePath)));
   }
 
-  @CheckForNull
-  public String property(String key) {
-    return properties.get(key);
+  public Optional<String> property(String key) {
+    return Optional.ofNullable(properties.get(key));
   }
 
   public Map<String, String> properties() {

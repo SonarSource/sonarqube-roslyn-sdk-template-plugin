@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,11 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 import org.sonar.api.PropertyType;
 import org.sonar.api.config.PropertyDefinition;
@@ -39,12 +42,14 @@ public class RoslynSdkPluginPropertiesTest {
     Context context = new Context();
     assertThat(context.repositories()).isEmpty();
 
+    Map<String, String> pluginProperties = new LinkedHashMap<>();
+    pluginProperties.put("foo", "fooValue");
+    pluginProperties.put("bar", "barValue");
+
     RoslynSdkConfiguration config = new RoslynSdkConfiguration(
       "/configuration.xml",
-      ImmutableMap.<String, String>of(),
-      ImmutableMap.of(
-        "foo", "fooValue",
-        "bar", "barValue"));
+      Collections.unmodifiableMap(new HashMap<String, String>()),
+      Collections.unmodifiableMap(pluginProperties));
 
     List<PropertyDefinition> properties = new RoslynSdkPluginProperties(config).getProperties();
     assertThat(properties).hasSize(2);

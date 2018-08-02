@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,13 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.Nullable;
 import org.junit.Test;
 import org.sonar.api.rules.RuleType;
+import org.sonar.api.server.debt.DebtRemediationFunction;
 import org.sonar.api.server.rule.RulesDefinition.Context;
 import org.sonar.api.server.rule.RulesDefinition.Repository;
 import org.sonar.api.server.rule.RulesDefinition.Rule;
@@ -46,11 +49,6 @@ public class RoslynSdkRulesDefinitionTest {
   }
 
   @Test
-  public void test_rules_defined_with_sqale_and_BOM() {
-    rulesDefinedWithSqaleXml("/org/sonar/plugins/roslynsdk/sqaleWithBOM.xml", true);
-  }
-
-  @Test
   public void test_rules_defined_without_sqale() {
     rulesDefinedWithSqaleXml(null);
   }
@@ -63,19 +61,19 @@ public class RoslynSdkRulesDefinitionTest {
     Context context = new Context();
     assertThat(context.repositories()).isEmpty();
 
-    ImmutableMap.Builder<String, String> properties = ImmutableMap.<String, String>builder()
-      .put("RepositoryKey", "MyRepoKey")
-      .put("RepositoryLanguage", "MyLangKey")
-      .put("RepositoryName", "MyRepoName")
-      .put("RulesXmlResourcePath", "/org/sonar/plugins/roslynsdk/rules.xml");
+    Map<String, String> properties = new HashMap<>();
+    properties.put("RepositoryKey", "MyRepoKey");
+    properties.put("RepositoryLanguage", "MyLangKey");
+    properties.put("RepositoryName", "MyRepoName");
+    properties.put("RulesXmlResourcePath", "/org/sonar/plugins/roslynsdk/rules.xml");
     if (sqaleXmlResourcePath != null) {
       properties.put("SqaleXmlResourcePath", sqaleXmlResourcePath);
     }
 
     RoslynSdkConfiguration config = new RoslynSdkConfiguration(
       "/configuration.xml",
-      properties.build(),
-      ImmutableMap.<String, String>of());
+      Collections.unmodifiableMap(properties),
+      Collections.unmodifiableMap(new HashMap<String, String>()));
 
     RoslynSdkRulesDefinition rulesDefinition = new RoslynSdkRulesDefinition(config);
     rulesDefinition.define(context);
@@ -97,30 +95,21 @@ public class RoslynSdkRulesDefinitionTest {
     assertThat(rule.params()).isEmpty();
 
     if (sqaleXmlResourcePath != null) {
-      if (withBOM) {
-        assertThat(rule.debtSubCharacteristic()).isNull();
-        assertThat(rule.debtRemediationFunction()).isNull();
-        assertThat(rule.effortToFixDescription()).isNull();
+      // sub-charactestic has been dropped with 6.7 LTS
+      assertThat(rule.debtSubCharacteristic()).isNull();
+      assertThat(rule.effortToFixDescription()).isNull();
 
-        assertThat(logTester.logs()).hasSize(2);
-        assertThat(logTester.logs(LoggerLevel.WARN)).contains(
-            "SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.",
-            "Unable to read SQALE xml file. Make sure the file does not starts with a BOM character.");
-      } else {
-        // sub-charactestic has been dropped with 6.7 LTS
-        assertThat(rule.debtSubCharacteristic()).isNull();
-        assertThat(rule.debtRemediationFunction().coefficient()).isNull();
-        assertThat(rule.debtRemediationFunction().offset()).isEqualTo("15min");
-        assertThat(rule.effortToFixDescription()).isNull();
-
-        assertThat(logTester.logs()).hasSize(1);
-        assertThat(logTester.logs(LoggerLevel.WARN))
-          .contains("SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.");
-      }
+      assertThat(logTester.logs()).hasSize(1);
+      assertThat(logTester.logs(LoggerLevel.WARN))
+        .contains("SQALE Model is deprecated and not supported anymore by SonarQube."
+          + "Please rely on SonarQube rules definition XML format. "
+          + "'SqaleXmlResourcePath' property will be ignored.");
     } else {
       assertThat(rule.debtSubCharacteristic()).isNull();
-      assertThat(rule.debtRemediationFunction()).isNull();
       assertThat(rule.effortToFixDescription()).isNull();
+      assertThat(rule.debtRemediationFunction()).isNotNull();
+      assertThat(rule.debtRemediationFunction().type()).isEqualTo(DebtRemediationFunction.Type.CONSTANT_ISSUE);
+      assertThat(rule.debtRemediationFunction().baseEffort()).isEqualTo("15min");
 
       assertThat(logTester.logs()).isEmpty();
     }

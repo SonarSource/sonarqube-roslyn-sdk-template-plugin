@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import org.sonar.api.PropertyType;
 import org.sonar.api.config.PropertyDefinition;
 
@@ -38,11 +38,9 @@ public class RoslynSdkPluginProperties {
   }
 
   public List<PropertyDefinition> getProperties() {
-    ImmutableList.Builder<PropertyDefinition> builder = ImmutableList.builder();
-    for (Map.Entry<String, String> pluginProperty: config.pluginProperties().entrySet()) {
-      builder.add(newHiddenPropertyDefinition(pluginProperty.getKey(), pluginProperty.getValue()));
-    }
-    return builder.build();
+    List<PropertyDefinition> properties = new ArrayList<>();
+    config.pluginProperties().forEach((key, defaultValue) -> properties.add(newHiddenPropertyDefinition(key, defaultValue)));
+    return Collections.unmodifiableList(properties);
   }
 
   private static PropertyDefinition newHiddenPropertyDefinition(String key, String defaultValue) {
