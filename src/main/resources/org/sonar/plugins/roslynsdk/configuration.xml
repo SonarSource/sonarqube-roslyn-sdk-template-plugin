@@ -4,7 +4,6 @@
   <RepositoryLanguage>example</RepositoryLanguage>
   <RepositoryName>example</RepositoryName>
   <RulesXmlResourcePath>/org/sonar/plugins/roslynsdk/rules.xml</RulesXmlResourcePath>
-  <SqaleXmlResourcePath>/org/sonar/plugins/roslynsdk/sqale.xml</SqaleXmlResourcePath>
   <PluginProperties>
     <example.pluginKey>example</example.pluginKey>
     <example.pluginVersion>example</example.pluginVersion>

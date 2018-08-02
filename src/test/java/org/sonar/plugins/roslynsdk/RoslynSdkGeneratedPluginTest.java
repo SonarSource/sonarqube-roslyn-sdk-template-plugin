@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,15 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+import org.sonar.api.Plugin;
+import org.sonar.api.SonarQubeSide;
 import org.sonar.api.config.PropertyDefinition;
+import org.sonar.api.internal.SonarRuntimeImpl;
+import org.sonar.api.utils.Version;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -34,7 +39,12 @@ public class RoslynSdkGeneratedPluginTest {
 
   @Test
   public void getExtensions() {
-    List extensions = new RoslynSdkGeneratedPlugin().getExtensions();
+    RoslynSdkGeneratedPlugin plugin = new RoslynSdkGeneratedPlugin();
+    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SCANNER));
+    plugin.define(context);
+
+    List extensions = context.getExtensions();
+    assertThat(extensions).hasSize(9);
 
     Class<?>[] expectedExtensions = new Class<?>[] {
       RoslynSdkConfiguration.class,
@@ -53,13 +63,13 @@ public class RoslynSdkGeneratedPluginTest {
   }
 
   private static List nonProperties(List extensions) {
-    ImmutableList.Builder builder = ImmutableList.builder();
+    List props = new ArrayList<>();
     for (Object extension : extensions) {
       if (!(extension instanceof PropertyDefinition)) {
-        builder.add(extension);
+        props.add(extension);
       }
     }
-    return builder.build();
+    return Collections.unmodifiableList(props);
   }
 
 }

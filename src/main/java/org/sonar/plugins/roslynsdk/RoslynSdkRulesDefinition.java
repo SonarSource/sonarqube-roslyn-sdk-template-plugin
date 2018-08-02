@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,11 @@ package org.sonar.plugins.roslynsdk;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import javax.xml.stream.XMLStreamException;
 import org.apache.commons.io.input.BOMInputStream;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.api.server.rule.RulesDefinitionXmlLoader;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
-import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
 public class RoslynSdkRulesDefinition implements RulesDefinition {
 
@@ -57,20 +55,12 @@ public class RoslynSdkRulesDefinition implements RulesDefinition {
       throw new IllegalStateException(e);
     }
 
-    String sqaleXmlResourcePath = config.property("SqaleXmlResourcePath");
-    if (sqaleXmlResourcePath != null) {
-      LOG.warn("SQALE Model is deprecated and not supported anymore by SonarQube. Please rely on SonarQube rules definition XML format.");
-      try {
-        SqaleXmlLoader.load(repository, sqaleXmlResourcePath);
-      } catch (IllegalStateException e) {
-        Throwable cause = e.getCause();
-        if (cause instanceof XMLStreamException) {
-          LOG.warn("Unable to read SQALE xml file. Make sure the file does not starts with a BOM character.", cause);
-        } else {
-          throw e;
-        }
-      }
-    }
+    config
+      .property("SqaleXmlResourcePath")
+      .ifPresent(sqaleXmlResourcePath -> LOG.warn(
+        "SQALE Model is deprecated and not supported anymore by SonarQube."
+          + "Please rely on SonarQube rules definition XML format. "
+          + "'SqaleXmlResourcePath' property will be ignored."));
 
     repository.done();
   }

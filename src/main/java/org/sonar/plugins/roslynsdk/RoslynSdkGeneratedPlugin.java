@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016-2016 SonarSource SA
+ * Copyright (c) 2016-2018 SonarSource SA
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,30 +23,30 @@
  */
 package org.sonar.plugins.roslynsdk;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import org.sonar.api.SonarPlugin;
+import org.sonar.api.Plugin;
 
-public class RoslynSdkGeneratedPlugin extends SonarPlugin {
+public class RoslynSdkGeneratedPlugin implements Plugin {
 
   private static final RoslynSdkConfiguration config = new RoslynSdkConfiguration();
 
   @Override
-  public List getExtensions() {
-    ImmutableList.Builder builder = ImmutableList.builder();
-
-    builder.add(
-      RoslynSdkConfiguration.class,
-      RoslynSdkRulesDefinition.class);
-
-    builder.addAll(new RoslynSdkPluginProperties(config).getProperties());
-
-    return builder.build();
+  public String toString() {
+    return config.mandatoryProperty("PluginKeyDifferentiator");
   }
 
   @Override
-  public String toString() {
-    return config.mandatoryProperty("PluginKeyDifferentiator");
+  public void define(Context context) {
+    List<Object> extensions = new ArrayList<>();
+
+    extensions.add(RoslynSdkConfiguration.class);
+    extensions.add(RoslynSdkRulesDefinition.class);
+
+    extensions.addAll(new RoslynSdkPluginProperties(config).getProperties());
+
+    context.addExtensions(Collections.unmodifiableList(extensions));
   }
 
 }
