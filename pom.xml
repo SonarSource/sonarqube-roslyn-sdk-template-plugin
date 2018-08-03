@@ -10,8 +10,8 @@
 
   <groupId>org.sonarsource.roslynsdk</groupId>
   <artifactId>sonar-roslyn-sdk-template-plugin</artifactId>
-  <packaging>sonar-plugin</packaging>
   <version>1.1-SNAPSHOT</version>
+  <packaging>sonar-plugin</packaging>
 
   <name>SonarQube Roslyn SDK Template Plugin</name>
   <description>Template plugin for Roslyn analyzers</description>
