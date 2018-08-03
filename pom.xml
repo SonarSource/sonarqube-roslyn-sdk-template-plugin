@@ -44,6 +44,8 @@
   </issueManagement>
 
   <properties>
+    <gitRepositoryName>sonarqube-roslyn-sdk-template-plugin</gitRepositoryName>
+    <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
     <sonar.version>7.3-alpha1</sonar.version>
     <license.name>MIT</license.name>
   </properties>
