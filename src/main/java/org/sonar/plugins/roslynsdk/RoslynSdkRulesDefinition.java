@@ -58,7 +58,7 @@ public class RoslynSdkRulesDefinition implements RulesDefinition {
     config
       .property("SqaleXmlResourcePath")
       .ifPresent(sqaleXmlResourcePath -> LOG.warn(
-        "SQALE Model is deprecated and not supported anymore by SonarQube."
+        "SQALE Model is deprecated and not supported anymore by SonarQube. "
           + "Please rely on SonarQube rules definition XML format. "
           + "'SqaleXmlResourcePath' property will be ignored."));
 

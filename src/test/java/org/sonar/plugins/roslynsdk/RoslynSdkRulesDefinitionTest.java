@@ -101,7 +101,7 @@ public class RoslynSdkRulesDefinitionTest {
 
       assertThat(logTester.logs()).hasSize(1);
       assertThat(logTester.logs(LoggerLevel.WARN))
-        .contains("SQALE Model is deprecated and not supported anymore by SonarQube."
+        .contains("SQALE Model is deprecated and not supported anymore by SonarQube. "
           + "Please rely on SonarQube rules definition XML format. "
           + "'SqaleXmlResourcePath' property will be ignored.");
     } else {
