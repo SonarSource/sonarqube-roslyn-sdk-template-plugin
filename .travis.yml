@@ -1,6 +1,8 @@
 language: java
 sudo: false
 
+jdk: openjdk11
+
 git:
   submodules: false
 

@@ -11,7 +11,7 @@ pipeline {
   }
   environment {
     SONARSOURCE_QA = 'true'
-    MAVEN_TOOL = 'Maven 3.3.x'
+    MAVEN_TOOL = 'Maven 3.5.x'
     // To simulate the build phase
     ARTIFACTORY_DEPLOY_REPO = "sonarsource-public-qa"
   }
@@ -28,7 +28,7 @@ pipeline {
             label 'linux'
           }
           steps {
-            withMaven(maven: MAVEN_TOOL) {
+            withQAEnv {
               mavenSetBuildVersion()
               sh 'mvn test'
             }
@@ -50,6 +50,15 @@ pipeline {
           burgrNotifyPromote()
         }
       }
+    }
+  }
+}
+
+def withQAEnv(def body) {
+  def jdk = tool name: 'Java 11', type: 'jdk'
+  withEnv(["JAVA_HOME=${jdk}"]) {
+    withMaven(maven: env.MAVEN_TOOL) {
+      body.call()
     }
   }
 }
