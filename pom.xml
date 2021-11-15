@@ -41,7 +41,6 @@
     <gitRepositoryName>sonarqube-roslyn-sdk-template-plugin</gitRepositoryName>
     <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
     <sonar.version>7.3-alpha1</sonar.version>
-    <license.name>GNU LGPL 3</license.name>
     <maven.compiler.release>8</maven.compiler.release>
   </properties>
 
