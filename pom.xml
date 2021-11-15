@@ -42,6 +42,7 @@
     <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
     <sonar.version>7.3-alpha1</sonar.version>
     <maven.compiler.release>8</maven.compiler.release>
+    <license.title>SonarQube Roslyn SDK Template Plugin</license.title>
   </properties>
 
   <dependencies>

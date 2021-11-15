@@ -1,5 +1,5 @@
 /*
- * SonarQube Roslyn SDK
+ * SonarQube Roslyn SDK Template Plugin
  * Copyright (C) 2016-2021 SonarSource SA
  * mailto:info AT sonarsource DOT com
  *
