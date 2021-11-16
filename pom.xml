@@ -20,18 +20,12 @@
 
   <licenses>
     <license>
-      <name>MIT</name>
+      <name>GNU LGPL 3</name>
+      <url>http://www.gnu.org/licenses/lgpl.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
 
-  <developers>
-    <developer>
-      <id>dbolkensteyn</id>
-      <name>Dinesh Bolkensteyn</name>
-      <organization>SonarSource</organization>
-    </developer>
-  </developers>
   <scm>
     <connection>scm:git:git@github.com:SonarSource-VisualStudio/sonarqube-roslyn-sdk-template-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:SonarSource-VisualStudio/sonarqube-roslyn-sdk-template-plugin.git</developerConnection>
@@ -47,8 +41,8 @@
     <gitRepositoryName>sonarqube-roslyn-sdk-template-plugin</gitRepositoryName>
     <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
     <sonar.version>7.3-alpha1</sonar.version>
-    <license.name>MIT</license.name>
     <maven.compiler.release>8</maven.compiler.release>
+    <license.title>SonarQube Roslyn SDK Template Plugin</license.title>
   </properties>
 
   <dependencies>
