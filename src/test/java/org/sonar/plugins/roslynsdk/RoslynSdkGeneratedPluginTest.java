@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import org.sonar.api.Plugin;
+import org.sonar.api.SonarEdition;
 import org.sonar.api.SonarQubeSide;
 import org.sonar.api.config.PropertyDefinition;
 import org.sonar.api.internal.SonarRuntimeImpl;
@@ -36,7 +37,7 @@ public class RoslynSdkGeneratedPluginTest {
   @Test
   public void getExtensions() {
     RoslynSdkGeneratedPlugin plugin = new RoslynSdkGeneratedPlugin();
-    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(6, 7), SonarQubeSide.SCANNER));
+    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(7, 9), SonarQubeSide.SCANNER, SonarEdition.COMMUNITY));
     plugin.define(context);
 
     List extensions = context.getExtensions();
