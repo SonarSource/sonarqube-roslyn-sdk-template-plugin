@@ -102,7 +102,7 @@
           <pluginName>roslynsdkpluginname</pluginName>
           <pluginDescription>roslynsdkplugindescription</pluginDescription>
           <pluginClass>org.sonar.plugins.roslynsdk.RoslynSdkGeneratedPlugin</pluginClass>
-          <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+          <sonarQubeMinVersion>7.9</sonarQubeMinVersion>
           <addMavenDescriptor>false</addMavenDescriptor>
         </configuration>
       </plugin>
