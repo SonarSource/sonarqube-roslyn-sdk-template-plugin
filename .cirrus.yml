@@ -14,8 +14,6 @@ env:
   BURGR_URL: VAULT[development/kv/data/burgr data.url]
   BURGR_USERNAME: VAULT[development/kv/data/burgr data.cirrus_username]
   BURGR_PASSWORD: VAULT[development/kv/data/burgr data.cirrus_password]
-  # access license key
-  GITHUB_TOKEN: VAULT[development/github/token/licenses-ro token]
   # Use bash (instead of sh on linux or cmd.exe on windows)
   CIRRUS_SHELL: bash
 
@@ -60,6 +58,7 @@ promote_task:
     #promotion cloud function
     GCF_ACCESS_TOKEN: VAULT[development/kv/data/promote data.token]
     PROMOTE_URL: VAULT[development/kv/data/promote data.url]
+    GITHUB_TOKEN: VAULT[development/github/token/${CIRRUS_REPO_OWNER}-${CIRRUS_REPO_NAME}-promotion token]
     #artifacts that will have downloadable links in burgr
     ARTIFACTS: "org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar" 
   maven_cache:
