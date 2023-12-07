@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.sonarsource.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>59.0.29</version>
+    <version>70.0.0.270</version>
   </parent>
 
   <groupId>org.sonarsource.roslynsdk</groupId>
@@ -102,7 +102,7 @@
           <pluginName>roslynsdkpluginname</pluginName>
           <pluginDescription>roslynsdkplugindescription</pluginDescription>
           <pluginClass>org.sonar.plugins.roslynsdk.RoslynSdkGeneratedPlugin</pluginClass>
-          <sonarQubeMinVersion>7.9</sonarQubeMinVersion>
+          <pluginApiMinVersion>7.9</pluginApiMinVersion>
           <addMavenDescriptor>false</addMavenDescriptor>
         </configuration>
       </plugin>
