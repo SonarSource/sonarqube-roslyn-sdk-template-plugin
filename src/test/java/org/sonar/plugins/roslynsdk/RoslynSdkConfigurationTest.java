@@ -21,34 +21,25 @@ package org.sonar.plugins.roslynsdk;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RoslynSdkConfigurationTest {
 
-  @Rule
-  public ExpectedException thrown = ExpectedException.none();
-
   @Test
   public void invalid_xml() {
-    thrown.expect(IllegalStateException.class);
-    thrown.expectMessage("Invalid Roslyn SDK XML configuration file: ");
-    thrown.expectMessage("invalid_xml.xml");
-
-    new RoslynSdkConfiguration("/RoslynSdkConfigurationTest/invalid_xml.xml");
+    assertThat(assertThrows(IllegalStateException.class, () -> new RoslynSdkConfiguration("/RoslynSdkConfigurationTest/invalid_xml.xml")).getMessage())
+      .isEqualTo("Invalid Roslyn SDK XML configuration file: /RoslynSdkConfigurationTest/invalid_xml.xml");
   }
 
   @Test
   public void invalid_root() {
-    thrown.expect(IllegalStateException.class);
-    thrown.expectMessage("Expected <RoslynSdkConfiguration> as root element in configuration file:");
-    thrown.expectMessage("invalid_root.xml");
-    thrown.expectMessage("<foo>");
-
-    new RoslynSdkConfiguration("/RoslynSdkConfigurationTest/invalid_root.xml");
+    assertThat(assertThrows(IllegalStateException.class,
+      () -> new RoslynSdkConfiguration("/RoslynSdkConfigurationTest/invalid_root.xml")).getMessage())
+      .isEqualTo("Expected <RoslynSdkConfiguration> as root element in configuration file: /RoslynSdkConfigurationTest/invalid_root.xml " +
+        "but got: <foo>");
   }
 
   @Test
@@ -74,12 +65,10 @@ public class RoslynSdkConfigurationTest {
 
   @Test
   public void missing_mandatory() {
-    thrown.expect(IllegalStateException.class);
-    thrown.expectMessage("Mandatory <MissingPropertyKey> element not found in the Roslyn SDK XML configuration file: ");
-    thrown.expectMessage("valid.xml");
-
     RoslynSdkConfiguration config = new RoslynSdkConfiguration("/RoslynSdkConfigurationTest/valid.xml");
-    config.mandatoryProperty("MissingPropertyKey");
+    assertThat(assertThrows(IllegalStateException.class, () -> config.mandatoryProperty("MissingPropertyKey")).getMessage())
+      .isEqualTo("Mandatory <MissingPropertyKey> element not found in the Roslyn SDK XML configuration file: " +
+        "/RoslynSdkConfigurationTest/valid.xml");
   }
 
   @Test
