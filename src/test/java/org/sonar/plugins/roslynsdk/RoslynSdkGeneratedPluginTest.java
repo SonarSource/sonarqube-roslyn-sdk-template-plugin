@@ -37,13 +37,14 @@ public class RoslynSdkGeneratedPluginTest {
   @Test
   public void getExtensions() {
     RoslynSdkGeneratedPlugin plugin = new RoslynSdkGeneratedPlugin();
-    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(7, 9), SonarQubeSide.SCANNER, SonarEdition.COMMUNITY));
+    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(9, 9), SonarQubeSide.SCANNER,
+      SonarEdition.COMMUNITY));
     plugin.define(context);
 
     List extensions = context.getExtensions();
     assertThat(extensions).hasSize(9);
 
-    Class<?>[] expectedExtensions = new Class<?>[] {
+    Class<?>[] expectedExtensions = new Class<?>[]{
       RoslynSdkConfiguration.class,
       RoslynSdkRulesDefinition.class
     };
