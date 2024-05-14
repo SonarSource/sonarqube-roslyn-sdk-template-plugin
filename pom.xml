@@ -96,6 +96,12 @@
       <artifactId>sonar-plugin-api-impl</artifactId>
       <version>9.9.5.90363</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
