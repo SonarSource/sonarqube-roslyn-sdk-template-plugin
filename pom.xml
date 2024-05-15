@@ -41,16 +41,17 @@
   <properties>
     <gitRepositoryName>sonarqube-roslyn-sdk-template-plugin</gitRepositoryName>
     <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
-    <sonar.version>7.9</sonar.version>
+    <!-- SQ vs. API version table: https://github.com/SonarSource/sonar-plugin-api?tab=readme-ov-file#sonarqube -->
+    <sonar.plugin.api.version>9.14.0.375</sonar.plugin.api.version>
     <maven.compiler.release>17</maven.compiler.release>
     <license.title>SonarQube Roslyn SDK Template Plugin</license.title>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.sonarsource.sonarqube</groupId>
+      <groupId>org.sonarsource.api.plugin</groupId>
       <artifactId>sonar-plugin-api</artifactId>
-      <version>${sonar.version}</version>
+      <version>${sonar.plugin.api.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -90,6 +91,12 @@
       <version>5.12.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.sonarsource.sonarqube</groupId>
+      <artifactId>sonar-plugin-api-impl</artifactId>
+      <version>9.9.5.90363</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -103,7 +110,7 @@
           <pluginName>roslynsdkpluginname</pluginName>
           <pluginDescription>roslynsdkplugindescription</pluginDescription>
           <pluginClass>org.sonar.plugins.roslynsdk.RoslynSdkGeneratedPlugin</pluginClass>
-          <pluginApiMinVersion>7.9</pluginApiMinVersion>
+          <pluginApiMinVersion>${sonar.plugin.api.version}</pluginApiMinVersion>
           <addMavenDescriptor>false</addMavenDescriptor>
         </configuration>
       </plugin>

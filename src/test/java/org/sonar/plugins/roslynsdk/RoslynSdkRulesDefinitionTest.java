@@ -91,18 +91,12 @@ public class RoslynSdkRulesDefinitionTest {
     assertThat(rule.params()).isEmpty();
 
     if (sqaleXmlResourcePath != null) {
-      // sub-charactestic has been dropped with 6.7 LTS
-      assertThat(rule.debtSubCharacteristic()).isNull();
-      assertThat(rule.effortToFixDescription()).isNull();
-
       assertThat(logTester.logs()).hasSize(1);
       assertThat(logTester.logs(LoggerLevel.WARN))
         .contains("SQALE Model is deprecated and not supported anymore by SonarQube. "
           + "Please rely on SonarQube rules definition XML format. "
           + "'SqaleXmlResourcePath' property will be ignored.");
     } else {
-      assertThat(rule.debtSubCharacteristic()).isNull();
-      assertThat(rule.effortToFixDescription()).isNull();
       assertThat(rule.debtRemediationFunction()).isNotNull();
       assertThat(rule.debtRemediationFunction().type()).isEqualTo(DebtRemediationFunction.Type.CONSTANT_ISSUE);
       assertThat(rule.debtRemediationFunction().baseEffort()).isEqualTo("15min");
