@@ -89,7 +89,7 @@
     <dependency>
       <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api-impl</artifactId>
-      <version>9.9.5.90363</version>
+      <version>25.9.0.112764</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
