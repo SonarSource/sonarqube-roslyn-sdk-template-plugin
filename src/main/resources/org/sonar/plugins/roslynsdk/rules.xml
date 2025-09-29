@@ -3,7 +3,7 @@
   <rule>
     <key>S1000</key>
     <name>My title</name>
-    <severity>CRITICAL</severity>
+    <severity>TEST</severity>
     <cardinality>SINGLE</cardinality>
     <description><![CDATA[My description]]></description>
     <tag>my-first-tag</tag>
