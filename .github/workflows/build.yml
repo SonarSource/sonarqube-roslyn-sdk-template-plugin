@@ -26,8 +26,8 @@ jobs:
         with:
           cache: true
           tool_versions: |
-            java 17
-            maven latest
+            java 21
+            maven 3.9
       - name: Build, deploy and analyze
         uses: SonarSource/ci-github-actions/build-maven@v1
         with:
