@@ -27,7 +27,7 @@ jobs:
           jira-user:  ${{ fromJSON(steps.secrets.outputs.vault).JIRA_USER }}
           jira-token: ${{ fromJSON(steps.secrets.outputs.vault).JIRA_TOKEN }}
 
-  cleanup:
+  PR_Build_Cleanup:
     runs-on: github-ubuntu-latest-s
     permissions:
       actions: write
