@@ -42,7 +42,7 @@
     <gitRepositoryName>sonarqube-roslyn-sdk-template-plugin</gitRepositoryName>
     <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
     <!-- SQ vs. API version table: https://github.com/SonarSource/sonar-plugin-api?tab=readme-ov-file#sonarqube -->
-    <sonar.plugin.api.version>9.14.0.375</sonar.plugin.api.version>
+    <sonar.plugin.api.version>13.8.0.4399</sonar.plugin.api.version>
     <maven.compiler.release>17</maven.compiler.release>
     <license.title>SonarQube Roslyn SDK Template Plugin</license.title>
     <license.name>GNU LGPL v3</license.name>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.10.2</version>
+      <version>6.1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -89,7 +89,7 @@
     <dependency>
       <groupId>org.sonarsource.sonarqube</groupId>
       <artifactId>sonar-plugin-api-impl</artifactId>
-      <version>25.9.0.112764</version>
+      <version>26.6.0.123539</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
