@@ -24,7 +24,7 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}  # Default behaviour is to checkout the commit in detached HEAD state, but this causes warnings in the pipeline. So we explicitly checkout the branch
       - name: Setup mise
-        uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566 # v3.2.0
+        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
         with:
           cache: true
           tool_versions: |
