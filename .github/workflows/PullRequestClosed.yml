@@ -7,7 +7,7 @@ on:
 jobs:
   PullRequestClosed_job:
     name: Pull Request Closed
-    runs-on: github-ubuntu-latest-s
+    runs-on: sonar-xs
     permissions:
       id-token: write
       pull-requests: read
@@ -26,10 +26,3 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           jira-user:  ${{ fromJSON(steps.secrets.outputs.vault).JIRA_USER }}
           jira-token: ${{ fromJSON(steps.secrets.outputs.vault).JIRA_TOKEN }}
-
-  PR_Build_Cleanup:
-    runs-on: github-ubuntu-latest-s
-    permissions:
-      actions: write
-    steps:
-      - uses: SonarSource/ci-github-actions/pr_cleanup@v1
