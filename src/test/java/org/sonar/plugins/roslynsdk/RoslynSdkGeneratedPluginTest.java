@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.roslynsdk;
 
+import com.sonarsource.scanner.engine.sensor.test.fixtures.TestSonarRuntime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,6 @@ import org.sonar.api.Plugin;
 import org.sonar.api.SonarEdition;
 import org.sonar.api.SonarQubeSide;
 import org.sonar.api.config.PropertyDefinition;
-import org.sonar.api.internal.SonarRuntimeImpl;
 import org.sonar.api.utils.Version;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -37,7 +37,7 @@ public class RoslynSdkGeneratedPluginTest {
   @Test
   public void getExtensions() {
     RoslynSdkGeneratedPlugin plugin = new RoslynSdkGeneratedPlugin();
-    Plugin.Context context = new Plugin.Context(SonarRuntimeImpl.forSonarQube(Version.create(9, 9), SonarQubeSide.SCANNER,
+    Plugin.Context context = new Plugin.Context(TestSonarRuntime.forSonarQube(Version.create(9, 9), SonarQubeSide.SCANNER,
       SonarEdition.COMMUNITY));
     plugin.define(context);
 

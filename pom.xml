@@ -43,6 +43,7 @@
     <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
     <!-- SQ vs. API version table: https://github.com/SonarSource/sonar-plugin-api?tab=readme-ov-file#sonarqube -->
     <sonar.plugin.api.version>13.8.0.4399</sonar.plugin.api.version>
+    <sonar.scanner.version>13.4.1.4007</sonar.scanner.version>
     <maven.compiler.release>17</maven.compiler.release>
     <license.title>SonarQube Roslyn SDK Template Plugin</license.title>
     <license.name>GNU LGPL v3</license.name>
@@ -55,10 +56,17 @@
       <version>${sonar.plugin.api.version}</version>
       <scope>provided</scope>
     </dependency>
+    <!-- Required by RoslynSdkRulesDefinitionTest for LogTesterJUnit5. -->
     <dependency>
       <groupId>org.sonarsource.api.plugin</groupId>
       <artifactId>sonar-plugin-api-test-fixtures</artifactId>
       <version>${sonar.plugin.api.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.sonarsource.scanner.engine</groupId>
+      <artifactId>sensor-test-fixtures</artifactId>
+      <version>${sonar.scanner.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -91,18 +99,6 @@
       <artifactId>mockito-core</artifactId>
       <version>5.23.0</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.sonarsource.sonarqube</groupId>
-      <artifactId>sonar-plugin-api-impl</artifactId>
-      <version>26.7.0.124771</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
   </dependencies>
 

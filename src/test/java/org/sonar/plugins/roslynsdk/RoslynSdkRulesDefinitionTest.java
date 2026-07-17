@@ -22,7 +22,6 @@ package org.sonar.plugins.roslynsdk;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.sonar.api.rules.RuleType;
@@ -50,11 +49,7 @@ public class RoslynSdkRulesDefinitionTest {
     rulesDefinedWithSqaleXml(null);
   }
 
-  private void rulesDefinedWithSqaleXml(@Nullable String sqaleXmlResourcePath) {
-    rulesDefinedWithSqaleXml(sqaleXmlResourcePath, false);
-  }
-
-  private void rulesDefinedWithSqaleXml(@Nullable String sqaleXmlResourcePath, boolean withBOM) {
+  private void rulesDefinedWithSqaleXml(String sqaleXmlResourcePath) {
     Context context = new Context();
     assertThat(context.repositories()).isEmpty();
 
