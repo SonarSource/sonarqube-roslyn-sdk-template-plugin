@@ -54,13 +54,13 @@ public class RoslynSdkPluginPropertiesTest {
     assertThat(foo.key()).isEqualTo("foo");
     assertThat(foo.defaultValue()).isEqualTo("fooValue");
     assertThat(foo.type()).isEqualTo(PropertyType.STRING);
-    assertThat(foo.global()).isFalse();
+    assertThat(foo.hidden()).isTrue();
 
     PropertyDefinition bar = properties.get(1);
     assertThat(bar.key()).isEqualTo("bar");
     assertThat(bar.defaultValue()).isEqualTo("barValue");
     assertThat(bar.type()).isEqualTo(PropertyType.STRING);
-    assertThat(bar.global()).isFalse();
+    assertThat(bar.hidden()).isTrue();
   }
 
 }
