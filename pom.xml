@@ -44,7 +44,7 @@
     <!-- SQ vs. API version table: https://github.com/SonarSource/sonar-plugin-api?tab=readme-ov-file#sonarqube -->
     <sonar.plugin.api.version>13.11.0.4459</sonar.plugin.api.version>
     <sonar.scanner.version>13.8.0.4534</sonar.scanner.version>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>21</maven.compiler.release>
     <license.title>SonarQube Roslyn SDK Template Plugin</license.title>
     <license.name>GNU LGPL v3</license.name>
   </properties>
