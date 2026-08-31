@@ -42,7 +42,7 @@
     <gitRepositoryName>sonarqube-roslyn-sdk-template-plugin</gitRepositoryName>
     <artifactsToPublish>org.sonarsource.roslynsdk:sonar-roslyn-sdk-template-plugin:jar</artifactsToPublish>
     <!-- SQ vs. API version table: https://github.com/SonarSource/sonar-plugin-api?tab=readme-ov-file#sonarqube -->
-    <sonar.plugin.api.version>13.11.0.4459</sonar.plugin.api.version>
+    <sonar.plugin.api.version>14.0.0.4498</sonar.plugin.api.version>
     <sonar.scanner.version>13.10.0.4657</sonar.scanner.version>
     <maven.compiler.release>21</maven.compiler.release>
     <license.title>SonarQube Roslyn SDK Template Plugin</license.title>
