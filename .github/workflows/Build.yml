@@ -18,6 +18,7 @@ jobs:
     runs-on: github-ubuntu-latest-s
     outputs:
       build-number: ${{ steps.build.outputs.BUILD_NUMBER }}
+      commit-sha: ${{ steps.source-sha.outputs.sha }}
     permissions:
       id-token: write
       contents: read
@@ -26,6 +27,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref || github.ref_name }}  # Default behaviour is to checkout the commit in detached HEAD state, but this causes warnings in the pipeline. So we explicitly checkout the branch
+      - name: Record built commit
+        id: source-sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Setup mise
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
@@ -62,7 +66,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
+          ref: ${{ needs.build.outputs.commit-sha }}
       - name: Setup mise
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
