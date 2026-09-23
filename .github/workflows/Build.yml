@@ -16,6 +16,9 @@ concurrency:
 jobs:
   build:
     runs-on: github-ubuntu-latest-s
+    outputs:
+      build-number: ${{ steps.build.outputs.BUILD_NUMBER }}
+      commit-sha: ${{ steps.source-sha.outputs.sha }}
     permissions:
       id-token: write
       contents: read
@@ -24,6 +27,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref || github.ref_name }}  # Default behaviour is to checkout the commit in detached HEAD state, but this causes warnings in the pipeline. So we explicitly checkout the branch
+      - name: Record built commit
+        id: source-sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Setup mise
         uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
@@ -31,14 +37,55 @@ jobs:
           tool_versions: |
             java 21
             maven 3.9
-      - name: Build, deploy and analyze
+      - name: Build and deploy
+        id: build
         uses: SonarSource/ci-github-actions/build-maven@v1
         with:
           deploy-pull-request: true
           artifactory-deployer-role: qa-deployer
+          sonar-platform: none
+          maven-args: -Pcoverage
+      - name: Upload build output for scanning
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: build-output-${{ steps.build.outputs.BUILD_NUMBER }}
+          path: '**/target'
+          retention-days: 3
+          overwrite: true
+
+  scan:
+    name: Scan
+    needs: build
+    runs-on: github-ubuntu-latest-s
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      BUILD_NUMBER: ${{ needs.build.outputs.build-number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.build.outputs.commit-sha }}
+      - name: Setup mise
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          cache: true
+          tool_versions: |
+            java 21
+            maven 3.9
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: build-output-${{ needs.build.outputs.build-number }}
+      - uses: SonarSource/ci-github-actions/build-maven@66c890622c26a71ea49efeb7e269bd58be455e77 # PR 348; re-pin to @v1 once merged
+        with:
+          deploy: false
+          skip-build: true
+          sonar-platform: next
+          artifactory-deployer-role: qa-deployer
 
   promote:
-    needs: [build]
+    needs: [build, scan]
     runs-on: github-ubuntu-latest-s
     permissions:
       id-token: write
