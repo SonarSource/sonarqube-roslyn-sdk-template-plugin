@@ -53,7 +53,7 @@ jobs:
     needs: [build, promote]
     if: >-
       always()
-      && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/branch-'))
+      && (github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/heads/branch-'))
       && contains(needs.*.result, 'failure')
     runs-on: github-ubuntu-latest-s
     permissions:
