@@ -48,3 +48,22 @@ jobs:
         uses: SonarSource/ci-github-actions/promote@v1
         with:
           promote-pull-request: true
+
+  notify-build-failure:
+    needs: [build, promote]
+    if: >-
+      always()
+      && (github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/heads/branch-'))
+      && contains(needs.*.result, 'failure')
+    runs-on: github-ubuntu-latest-s
+    permissions:
+      actions: read
+      id-token: write # required for vault-action-wrapper in the shared slack-notify action
+    steps:
+      - name: Slack Notification
+        uses: SonarSource/core-languages-tooling-public/common-actions/slack-notify@v1
+        with:
+          slack-channel: squad-corelang-notifs
+          branch-patterns: ${{ format('{0},branch-*', github.event.repository.default_branch) }}
+          github-token: ${{ github.token }}
+          branch: ${{ github.ref_name }}
