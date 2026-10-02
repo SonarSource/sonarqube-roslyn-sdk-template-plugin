@@ -113,7 +113,6 @@
           <pluginName>roslynsdkpluginname</pluginName>
           <pluginDescription>roslynsdkplugindescription</pluginDescription>
           <pluginClass>org.sonar.plugins.roslynsdk.RoslynSdkGeneratedPlugin</pluginClass>
-          <pluginApiMinVersion>${sonar.plugin.api.version}</pluginApiMinVersion>
           <addMavenDescriptor>false</addMavenDescriptor>
         </configuration>
       </plugin>
