@@ -37,6 +37,13 @@ jobs:
           tool_versions: |
             java 21
             maven 3.9
+      # Build-number refs only track a number; use the existing base commit so
+      # claiming a PR number does not create refs containing workflow changes.
+      - name: Claim PR build number
+        if: github.event_name == 'pull_request'
+        uses: SonarSource/ci-github-actions/get-build-number@v2
+        env:
+          GITHUB_SHA: ${{ github.event.pull_request.base.sha }}
       - name: Build and deploy
         id: build
         uses: SonarSource/ci-github-actions/build-maven@v2
@@ -56,6 +63,12 @@ jobs:
   analysis:
     name: NEXT analysis
     needs: build
+    # Match build-maven's should_scan policy; other refs only build and deploy.
+    if: >-
+      github.event_name == 'pull_request' ||
+      github.ref_name == github.event.repository.default_branch ||
+      startsWith(github.ref_name, 'branch-') ||
+      startsWith(github.ref_name, 'feature/long/')
     runs-on: github-ubuntu-latest-s
     permissions:
       id-token: write
@@ -68,7 +81,7 @@ jobs:
         with:
           ref: ${{ needs.build.outputs.commit-sha }}
       - name: Setup mise
-        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           cache: true
           tool_versions: |
@@ -84,6 +97,10 @@ jobs:
           sonar-platform: next
 
   promote:
+    if: >-
+      !cancelled()
+      && needs.build.result == 'success'
+      && (needs.analysis.result == 'success' || needs.analysis.result == 'skipped')
     needs: [build, analysis]
     runs-on: github-ubuntu-latest-s
     permissions:
@@ -96,7 +113,7 @@ jobs:
           promote-pull-request: true
 
   notify-build-failure:
-    needs: [build, promote]
+    needs: [build, analysis, promote]
     if: >-
       always()
       && (github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/heads/branch-'))
