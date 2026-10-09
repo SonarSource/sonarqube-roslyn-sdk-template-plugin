@@ -31,7 +31,7 @@ jobs:
         id: source-sha
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Setup mise
-        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        uses: jdx/mise-action@7a4e45a543138629540c9a1616d08632b893e492 # v5.0.1
         with:
           cache: true
           tool_versions: |
@@ -94,3 +94,22 @@ jobs:
         uses: SonarSource/ci-github-actions/promote@v2
         with:
           promote-pull-request: true
+
+  notify-build-failure:
+    needs: [build, promote]
+    if: >-
+      always()
+      && (github.ref_name == github.event.repository.default_branch || startsWith(github.ref, 'refs/heads/branch-'))
+      && contains(needs.*.result, 'failure')
+    runs-on: github-ubuntu-latest-s
+    permissions:
+      actions: read
+      id-token: write # required for vault-action-wrapper in the shared slack-notify action
+    steps:
+      - name: Slack Notification
+        uses: SonarSource/core-languages-tooling-public/common-actions/slack-notify@v1
+        with:
+          slack-channel: squad-corelang-notifs
+          branch-patterns: ${{ format('{0},branch-*', github.event.repository.default_branch) }}
+          github-token: ${{ github.token }}
+          branch: ${{ github.ref_name }}
