@@ -14,7 +14,7 @@
 
 # SonarQube Roslyn SDK template plugin
 
-This repository contains the base plugin embedded in the SonarQube Roslyn SDK. The SDK adapts the packaged template for different Roslyn analyzers and their rule descriptions.
+This repository contains the base plugin template for the SonarQube Roslyn SDK.
 
 To learn more about Sonar products, visit the [Sonar website](https://www.sonarsource.com/products/sonarqube/).
 
@@ -22,6 +22,4 @@ To learn more about Sonar products, visit the [Sonar website](https://www.sonars
 
 This plugin is compatible with SonarQube 9.9+.
 
-The produced jar file is embedded inside the SonarQube Roslyn SDK. The SDK updates the static content of the jar to accomodate different Roslyn analyzers and their rule descriptions.
-
-The template is used by the [SonarQube Roslyn SDK](https://github.com/SonarSource/sonarqube-roslyn-sdk).
+The produced jar file is embedded inside the [SonarQube Roslyn SDK](https://github.com/SonarSource/sonarqube-roslyn-sdk), which updates the static content of the jar to accommodate different Roslyn analyzers and their rule descriptions.
